@@ -11,5 +11,5 @@ host = "0.0.0.0"
 
 threaded = False
 
-debug = False
+debug = True
 

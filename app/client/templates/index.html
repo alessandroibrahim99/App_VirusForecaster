@@ -17,28 +17,27 @@
         
         
         <!-- INPUT FORM -->
-        <div class="col col-4">
-            <form method="post">
+        <div class="col col-2">
+            <form method="post" id="filters-form">
                 
                 <br><label>Select a Country</label>
-                <select class="form-control" required name="country" value={{request.form.country}}>
+                <select class="form-control" required name="country" id="country" value={{request.form.country}}>
                     {% for i in countrylist %} <option>{{i}}</option> {% endfor %}
                 </select>
                 
                 <br><br><br><button type="submit" class="btn btn-primary" id="btnData">Predict</button>
 
             </form>
-            <script>
+            <!-- <script>
                 $("form").submit(function() {
                     $("#btnData").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
                 });
-            </script>
+            </script> -->
 
         </div>
-        
-        
+
         <!-- PLOT OUTPUT-->
-        <div class="col col-8" id="data-plot">
+        <div class="col col-10" id="data-plot">
             <img src="{{img}}" class="img-fluid" alt="Responsive image" id="img-data-plot">
         </div>
           

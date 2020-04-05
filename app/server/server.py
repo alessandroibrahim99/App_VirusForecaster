@@ -8,6 +8,8 @@ from pkg.data import data
 from pkg.model import model
 from config.file_system import *
 
+from flask import request, make_response
+import json
 
 
 '''
@@ -24,8 +26,32 @@ def create_app(name=None):
     @app.route('/ping', methods=["GET"])
     def ping():
         return 'pong'
-    
-    
+
+    @app.route('/get-chart-data', methods=["GET"])
+    def getChartData():
+        try:
+            country = request.args.get("country", 0, type=str)
+
+            return json.dumps({
+                "root": {
+                    "exit_status": 0,
+                    "message": "",
+                    "data": {
+                        "country": country,
+                        "peak": "15/04/2020",
+                        "days": []
+                    }
+                }
+            })
+        except Exception as e:
+            '''app.logger.error(e)'''
+            return json.dumps({
+                "root": {
+                    "exit_status": -1,
+                    "message": str(e)
+                }
+            })
+
     @app.route("/", methods=['GET', 'POST'])
     def index():
         try:
@@ -35,7 +61,7 @@ def create_app(name=None):
 
             if flask.request.method == 'POST':
                 country = flask.request.form["country"]
-                app.logger.info("Selected "+country)
+                app.logger.info("Selected "+ country)
             else:
                 country = "World"
             
