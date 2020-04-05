@@ -6,6 +6,7 @@ import flask
 
 from pkg.data import data
 from pkg.model import model
+from pkg.output import output
 from config.file_system import *
 
 from flask import request, make_response
@@ -57,8 +58,31 @@ def create_app(name=None):
         try:
             ts = data()
             ts.get_data()
-            app.logger.info("Got Data")
+            app.logger.info("--- Got Data ---")
+            
+            lst_dtfs = []
+            for country in ts.countrylist: 
+                app.logger.info(country)
+                ts.process_data(country)   
+                if ts.cases["data"].max() < 1000:
+                    next
+                else:
+                    logistic = model()
+                    logistic.forecast(ts.cases)
+                    logistic.add_deaths(ts.mortality)
+                    lst_dtfs.append((country, logistic.dtf_out))
+            app.logger.info("--- Model Run ---")
+            
+            dic_data = {}
+            for country,dtf in lst_dtfs:
+                json = output()
+                json.create_json(dtf)
+                dic_data[country] = json.dic
+            json.save(dic_data, dirpath+'app/client/data/')
+            app.logger.info("--- Saved Json ---")
 
+            
+            
             if flask.request.method == 'POST':
                 country = flask.request.form["country"]
                 app.logger.info("Selected "+ country)
@@ -66,10 +90,18 @@ def create_app(name=None):
                 country = "World"
             
             ts.process_data(country)
+            
             logistic = model()
             logistic.forecast(ts.cases)
             logistic.add_deaths(ts.mortality)
             img = logistic.plot(country)
+            app.logger.info("--- Model Run ---")
+            
+            # json = output()
+            # json.create_json(logistic.dtf_out, country)
+            # json.save(dirpath+'app/client/data/')
+            # app.logger.info("--- Saved Json ---")
+            
             return flask.render_template("index.html", img=img, country=country, countrylist=ts.countrylist)
             
         except Exception as e:
