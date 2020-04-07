@@ -19,11 +19,7 @@ def forecast_country(country, data, model, ouput):
     model.forecast(data.cases)
     model.add_deaths(data.mortality)
     ouput.create_output(model.dtf_out, country)
-    dic_out = {"root": {"exit_status":0,
-                        "message": "",
-                        "data": ouput.dic
-                       }}
-    return json.dumps(dic_out)
+    return json.dumps(ouput.dic)
     
 
 
@@ -83,9 +79,11 @@ def create_app(name=None):
             app.logger.info("Selected "+ country)
             
             ### calculate output
-            return forecast_country(country, data, model, output)
-
-        
+            json_out = forecast_country(country, data, model, output)
+            return  {"root": {"exit_status":0,
+                              "message": "",
+                              "data": json_out
+                              }}
         except Exception as e:
             app.logger.error(e)
             return json.dumps({"root": {"exit_status": -1,
