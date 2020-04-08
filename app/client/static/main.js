@@ -92,5 +92,10 @@ function Covid19() {
 }
 
 $(document).ready(function (e) {
+	$(".navbar-nav li a").on("click", function() {
+		$(this).addClass("active");
+		setTimeout(function() { $(".navbar-nav li a").removeClass("active"); }, 1000)
+	});
+
 	Covid19();
 });

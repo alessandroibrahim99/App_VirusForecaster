@@ -54,16 +54,9 @@
             </ul>
         </div>
     </nav>
-    <script>
-        $(".navbar-nav li a").on("click", function() {
-            $(this).addClass("active");
-            setTimeout(function() { $(".navbar-nav li a").removeClass("active"); }, 1000)
-        });
-    </script>
-
 
     <!-- MAIN BODY -->
-    <main class="container-fluid" style="padding:25px; margin-top:75px; margin-left:25px; min-height:100vh;"
+    <main class="container-fluid" style="padding:25px; margin-top:75px; margin-left:25px; min-height: 768px;"
         role="main">
         {% block body %}{% endblock %}
     </main>
