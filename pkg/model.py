@@ -9,7 +9,7 @@ import base64
 
 
 
-class model():
+class Model():
     
     @staticmethod
     def f(X, c, k, m):
@@ -40,6 +40,8 @@ class model():
     def add_diff(dtf):
         dtf["delta_data"] = dtf["data"] - dtf["data"].shift(1)
         dtf["delta_forecast"] = dtf["forecast"] - dtf["forecast"].shift(1)
+        dtf["delta_data"] = dtf["delta_data"].fillna(method='bfill')
+        dtf["delta_forecast"] = dtf["delta_forecast"].fillna(method='bfill')
         idx = dtf[pd.isnull(dtf["data"])]["delta_forecast"].index[0]
         posx = dtf.index.tolist().index(idx)
         posx_a = posx - 1

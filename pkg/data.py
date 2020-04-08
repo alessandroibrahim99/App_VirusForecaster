@@ -3,7 +3,7 @@ import pandas as pd
 
 
 
-class data():
+class Data():
     
     def get_data(self):
         self.dtf_cases = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", sep=",")

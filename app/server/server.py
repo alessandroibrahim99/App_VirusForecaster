@@ -3,63 +3,25 @@
 ###############################################################################
 
 import flask
-
-from pkg.data import data
-from pkg.model import model
-from pkg.output import output
-from config.file_system import *
-
-from flask import request, make_response
 import json
 
-def forecastCountry(app=flask.Flask, ts=data, selected_country=str):
-    app.logger.info("--- Got Data ---")
-    
-    lst_dtfs = []
-    for country in ts.countrylist: 
-        app.logger.info(country)
-        ts.process_data(country)   
-        if ts.cases["data"].max() < 1000:
-            next
-        else:
-            logistic = model()
-            logistic.forecast(ts.cases)
-            logistic.add_deaths(ts.mortality)
-            lst_dtfs.append((country, logistic.dtf_out))
-    app.logger.info("--- Model Run ---")
-    
-    dic_data = {}
-    for country,dtf in lst_dtfs:
-        json = output()
-        json.create_json(dtf)
-        dic_data[country] = json.dic
-    json.save(dic_data, dirpath+'app/client/data/')
-    app.logger.info("--- Saved Json ---")
+from pkg.data import Data
+from pkg.model import Model
+from pkg.output import Output
+from config.file_system import *
 
-    country = selected_country
 
-    '''
-    if flask.request.method == 'POST':
-        country = flask.request.form["country"]
-        app.logger.info("Selected "+ country)
-    else:
-        country = "World"
-    '''
-    
-    ts.process_data(country)
-    
-    logistic = model()
-    logistic.forecast(ts.cases)
-    logistic.add_deaths(ts.mortality)
-    img = logistic.plot(country)
-    app.logger.info("--- Model Run ---")
 
-    return img
+'''
+'''
+def forecast_country(country, data, model, ouput):
+    data.process_data(country)   
+    model.forecast(data.cases)
+    model.add_deaths(data.mortality)
+    ouput.create_output(model.dtf_out, country)
+    return json.dumps(ouput.dic)
     
-    # json = output()
-    # json.create_json(logistic.dtf_out, country)
-    # json.save(dirpath+'app/client/data/')
-    # app.logger.info("--- Saved Json ---")
+
 
 '''
 '''
@@ -69,69 +31,65 @@ def create_app(name=None):
     app = flask.Flask(name, instance_relative_config=True, 
                       template_folder=dirpath+'app/client/templates',
                       static_folder=dirpath+'app/client/static')
-    default_country = "Italy"
+    default_country = "World"
+    
     
     ## api
     @app.route('/ping', methods=["GET"])
     def ping():
-        return 'pong'
-
-    @app.route('/get-chart-data', methods=["GET"])
-    def getChartData():
-        try:
-            country = request.args.get("country", 0, type=str)
-            if not country:
-                country="World"
-
-            ts = data()
-            ts.get_data()
-
-            img = forecastCountry(app, ts, country);
-
-            return json.dumps({
-                "root": {
-                    "exit_status": 0,
-                    "message": "",
-                    "data": {
-                        "country": country,
-                        "img": img,
-                        "peak": "15/04/2020",
-                        "days": []
-                    }
-                }
-            })
-        except Exception as e:
-            '''app.logger.error(e)'''
-            return json.dumps({
-                "root": {
-                    "exit_status": -1,
-                    "message": str(e)
-                }
-            })
-
+        return json.dumps({'ping':'pong'})
+    
+    
     @app.route("/", methods=['GET', 'POST'])
     def index():
         try:
-            ts = data()
-            ts.get_data()
-
-            if flask.request.method == 'POST':
-                my_country = flask.request.form["country"]
-                app.logger.info("Selected "+ my_country)
-            elif flask.request.method == 'GET':
-                my_country = request.args.get("country", 0, type=str)
-                app.logger.info("Selected "+ my_country)
-            else:
-                my_country = default_country
-
-            img = forecastCountry(app, ts, my_country)
-
-            return flask.render_template("index.html", img=img, country=my_country, countrylist=ts.countrylist)
+            ### init 
+            data, model, output = Data(), Model(), Output()
+            
+            ### read data
+            data.get_data()
+            
+            ### define country
+            #country = flask.request.form["country"] if flask.request.method == 'POST' else default_country
+            #country = default_country
+            #app.logger.info("Selected "+ country)
+            
+            ### calculate output 
+            json_out = forecast_country(default_country, data, model, output)
+            return flask.render_template("index.html", json_out=json_out, country=country, countrylist=data.countrylist)
             
         except Exception as e:
             app.logger.error(e)
             flask.abort(500)
-    
+
+
+    @app.route('/get-chart-data', methods=["GET"])
+    def getChartData():
+        try:
+            ### init 
+            data, model, output = Data(), Model(), Output()
+            
+            ### read data
+            data.get_data()
+            
+            ### define country
+            country = flask.request.args.get("country", 0, type=str)
+            if not country:
+                country = default_country
+            app.logger.info("Selected "+ country)
+            
+            ### calculate output
+            json_out = forecast_country(country, data, model, output)
+            return  {"root": {"exit_status":0,
+                              "message": "",
+                              "data": json_out
+                              }}
+        except Exception as e:
+            app.logger.error(e)
+            return json.dumps({"root": {"exit_status": -1,
+                                        "message": str(e)
+                                        }})
+
     
     ## errors
     @app.errorhandler(404)
