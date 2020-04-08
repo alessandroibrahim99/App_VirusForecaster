@@ -56,7 +56,7 @@ def create_app(name=None):
             
             ### calculate output 
             json_out = forecast_country(default_country, data, model, output)
-            return flask.render_template("index.html", json_out=json_out, country=country, countrylist=data.countrylist)
+            return flask.render_template("index.html", json_out=json_out, country=default_country, countrylist=data.countrylist)
             
         except Exception as e:
             app.logger.error(e)
