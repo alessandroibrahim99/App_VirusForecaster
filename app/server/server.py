@@ -2,6 +2,8 @@
 #                                MAIN                                         #
 ###############################################################################
 
+### import pdb
+
 import flask
 import json
 
@@ -19,7 +21,8 @@ def forecast_country(country, data, model, ouput):
     model.forecast(data.cases)
     model.add_deaths(data.mortality)
     ouput.create_output(model.dtf_out, country)
-    return json.dumps(ouput.dic)
+    ### return json.dumps(ouput.dic)
+    return ouput.dic
     
 
 
@@ -43,6 +46,8 @@ def create_app(name=None):
     @app.route("/", methods=['GET', 'POST'])
     def index():
         try:
+            ### pdb.set_trace()
+
             ### init 
             data, model, output = Data(), Model(), Output()
             
@@ -55,8 +60,9 @@ def create_app(name=None):
             #app.logger.info("Selected "+ country)
             
             ### calculate output 
-            json_out = forecast_country(default_country, data, model, output)
-            return flask.render_template("index.html", json_out=json_out, country=country, countrylist=data.countrylist)
+            ### json_out = forecast_country(default_country, data, model, output)
+            ### return flask.render_template("index.html", json_out=json.dumps(json_out), country=default_country, countrylist=data.countrylist)
+            return flask.render_template("index.html", country=default_country, countrylist=data.countrylist)
             
         except Exception as e:
             app.logger.error(e)
@@ -98,7 +104,8 @@ def create_app(name=None):
     
     @app.errorhandler(500)
     def internal_server_error(e):
-        return flask.render_template('errors.html', msg="Something went terribly wrong"), 500
+        ### return flask.render_template('errors.html', msg="Something went terribly wrong"), 500
+        return flask.render_template('errors.html', msg=str(e)), 500
     
     
     return app

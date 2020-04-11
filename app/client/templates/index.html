@@ -28,7 +28,7 @@
                     {% endfor %}
                 </select>
 
-                <br><br><br><button type="submit" class="btn btn-primary" id="btnData">Predict</button>
+                <!-- <br><br><br><button type="submit" class="btn btn-primary" id="btnData">Predict</button> -->
 
             </form>
             <!-- <script>
@@ -45,8 +45,11 @@
             <img src="{{img}}" class="img-fluid" alt="Responsive image" id="img-data-plot">
         </div>
         -->
-         <div> {{json_out}} </div>
-        
+        <script>
+            window.start_json = " {{ json_out }} "
+        </script>
+        <div class="col col-10" id="data-plot">
+        </div>
     </div>
 </div>
 
