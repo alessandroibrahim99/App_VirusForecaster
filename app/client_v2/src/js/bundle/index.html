@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %} DataScienceItalia {% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+
+<h3>Contagion Forecaster</h3>
+
+<div>
+    <div class="row">
+
+        <!-- INPUT FORM -->
+        <div class="col col-2">
+            <form method="post" id="filters-form">
+                <label>Country</label>
+                <select class="form-control" required name="country" id="country">
+                    {% for i in countrylist %}
+                    <option value="{{i}}" {% if i == country %} selected {% endif %}>
+                        {{i}}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <br>
+                <label>Confirmed cases until today</label>
+                <div id="total_cases_today"></div>
+
+                <br>
+                <label>Estimated cases in 30days</label>
+                <div id="total_cases_30days"></div>
+
+                <br>
+                <label>Peak day</label>
+                <div id="day_of_peak"></div>
+
+                <br>
+                <label>Active cases until today</label>
+                <div id="active_cases_today"></div>
+
+                <br>
+                <label>Estimated active cases in 30days</label>
+                <div id="active_cases_30days"></div>
+
+                <!-- <br>
+                <label>Estimated days to peak</label>
+                <div id="estimated_days_to_peak"></div> -->
+            </form>
+        </div>
+
+        <!-- PLOT OUTPUT -->
+        <div class="col col-10" id="data-plot">
+            <label>Total cases</label>
+        </div>
+        <!-- <script> window.start_json = " {{ json_out }} " </script> -->
+    </div>
+</div>
+
+{% endblock %}<script src="/main.bundle.js"></script>

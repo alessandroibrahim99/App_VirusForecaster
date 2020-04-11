@@ -32,8 +32,11 @@ def create_app(name=None):
     ## app object
     name = name if name is not None else __name__
     app = flask.Flask(name, instance_relative_config=True, 
-                      template_folder=dirpath+'app/client/templates',
-                      static_folder=dirpath+'app/client/static')
+                      ### template_folder=dirpath+'app/client/templates',
+                      ### static_folder=dirpath+'app/client/static')
+                      template_folder=dirpath+'app/client_v2/src/html',
+                      static_folder=dirpath+'app/client_v2/src')
+    ### app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     default_country = "World"
     
     
@@ -62,8 +65,8 @@ def create_app(name=None):
             ### calculate output 
             ### json_out = forecast_country(default_country, data, model, output)
             ### return flask.render_template("index.html", json_out=json.dumps(json_out), country=default_country, countrylist=data.countrylist)
-            return flask.render_template("index.html", country=default_country, countrylist=data.countrylist)
-            
+            return flask.render_template("index.html", json_out="", country=default_country, countrylist=data.countrylist)
+
         except Exception as e:
             app.logger.error(e)
             flask.abort(500)
