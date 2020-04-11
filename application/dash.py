@@ -23,7 +23,7 @@ data.get_data()
 
 
 # App Instance
-app = dash.Dash(name=config.name, assets_folder=config.root+"/application/static", external_stylesheets=[dbc.themes.PULSE, config.fontawesome])
+app = dash.Dash(name=config.name, assets_folder=config.root+"/application/static", external_stylesheets=[dbc.themes.LUX, config.fontawesome])
 app.title = config.name
 
 
