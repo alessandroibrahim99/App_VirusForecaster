@@ -51,7 +51,7 @@ class Output():
         self.dic = {}
         
         ## main data
-        self.dic["days"] = [{"day":k, "data":v} for k,v in dtf.to_dict("index").items()]
+        self.dic["days"] = [{"day":k, "data":v} for k,v in dtf.fillna("").to_dict("index").items()]
         
         ## total cases
         self.dic["total_cases_until_today"] = dtf["data"].max()
@@ -67,4 +67,5 @@ class Output():
         
         ## add country
         self.dic["country"] =  country
+        
     
