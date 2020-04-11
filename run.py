@@ -2,12 +2,9 @@
 #                            RUN MAIN                                         #
 ###############################################################################
 
-from config.app_settings import *
-from config.file_system import *
-from app.server import server
+from application.dash import app
+from settings import config
 
 
 
-app = server.create_app(name=name)
-
-app.run(host=host, port=port, threaded=threaded, debug=debug)
+app.run_server(debug=config.debug, host=config.host, port=config.port)
