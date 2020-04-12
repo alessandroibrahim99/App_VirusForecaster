@@ -34,33 +34,33 @@ class Result():
     def plot_total(self, today):
         ## main plots
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.dtf.index, y=self.dtf["data"], mode='markers', name='data'))
+        fig.add_trace(go.Scatter(x=self.dtf.index, y=self.dtf["data"], mode='markers', name='data', line={"color":"black"}))
         fig.add_trace(go.Scatter(x=self.dtf.index, y=self.dtf["forecast"], mode='none', name='forecast', fill='tozeroy'))
         fig.add_trace(go.Bar(x=self.dtf.index, y=self.dtf["deaths"], name='deaths', marker_color='red'))
         ## add slider
         fig.update_xaxes(rangeslider_visible=True)    
-        ## add title
-        fig.update_layout(title_text="Total cases")        
+        ## set background color
+        fig.update_layout(plot_bgcolor='white', autosize=False, width=1000, height=550)        
         ## add vline
         fig.add_shape({"x0":today, "x1":today, "y0":0, "y1":self.dtf["forecast"].max(), 
                        "type":"line", "line":{"width":2,"dash":"dot"} })
-        fig.add_trace(go.Scatter(x=[today], y=[self.dtf["forecast"].max()], text=["today"], mode="text", showlegend=False))
+        fig.add_trace(go.Scatter(x=[today], y=[self.dtf["forecast"].max()], text=["today"], mode="text", line={"color":"green"}, showlegend=False))
         return fig
         
         
     def plot_active(self, today):
         ## main plots
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=self.dtf.index, y=self.dtf["delta_data"], showlegend=False))
-        fig.add_trace(go.Scatter(x=self.dtf.index, y=self.dtf["delta_forecast"], mode='none', showlegend=False, fill='tozeroy'))
+        fig.add_trace(go.Bar(x=self.dtf.index, y=self.dtf["delta_data"], name='data', marker_color='black'))
+        fig.add_trace(go.Scatter(x=self.dtf.index, y=self.dtf["delta_forecast"], mode='none', name='forecast', fill='tozeroy'))
         ## add slider
         fig.update_xaxes(rangeslider_visible=True)
-        ## add title
-        fig.update_layout(title_text="Active cases") 
+        ## set background color
+        fig.update_layout(plot_bgcolor='white', autosize=False, width=1000, height=550)
         ## add vline
         fig.add_shape({"x0":today, "x1":today, "y0":0, "y1":self.dtf["delta_forecast"].max(), 
                        "type":"line", "line":{"width":2,"dash":"dot"} })
-        fig.add_trace(go.Scatter(x=[today], y=[self.dtf["delta_forecast"].max()], text=["today"], mode="text", showlegend=False))
+        fig.add_trace(go.Scatter(x=[today], y=[self.dtf["delta_forecast"].max()], text=["today"], mode="text", line={"color":"green"}, showlegend=False))
         return fig
     
         
