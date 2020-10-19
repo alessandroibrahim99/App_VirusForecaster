@@ -50,7 +50,7 @@ navbar = dbc.Nav(className="nav nav-pills", children=[
 
 # Input
 inputs = dbc.FormGroup([
-    html.H4("Select Countryy"),
+    html.H4("Select Country"),
     dcc.Dropdown(id="country", options=[{"label":x,"value":x} for x in data.countrylist], value="World")
 ]) 
 
