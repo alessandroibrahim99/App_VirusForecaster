@@ -12,7 +12,7 @@ class Data():
         self.dtf_cases = df_cases#pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", sep=",")
         self.dtf_deaths = df_deaths#pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv", sep=",")
         #self.countrylist = ["World"] + self.dtf_cases["Country/Region"].unique().tolist()
-        self.countrylist = ["World"] + self.dtf_cases["Province/State"].unique().tolist()
+        self.countrylist = ["Canada"] + self.dtf_cases["Province/State"].unique().tolist()
 
     
     @staticmethod
