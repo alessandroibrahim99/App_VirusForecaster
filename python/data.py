@@ -8,12 +8,13 @@ class Data():
     def get_data(self):
         self.dtf_cases = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", sep=",")
         self.dtf_deaths = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv", sep=",")
-        #self.geo = self.dtf_cases[['Country/Region','Lat','Long']].drop_duplicates("Country/Region", keep='first')
+        #self.countrylist = ["World"] + self.dtf_cases["Country/Region"].unique().tolist()
         self.countrylist = ["World"] + self.dtf_cases["Country/Region"].unique().tolist()
 
     
     @staticmethod
     def group_by_country(dtf, country):
+        dtf = dtf.loc[dtf['Country/Region']== 'Canada']
         dtf = dtf.drop(['Province/State','Lat','Long'], axis=1).groupby("Country/Region").sum().T
         dtf["World"] = dtf.sum(axis=1)
         dtf = dtf[country]
